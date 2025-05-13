@@ -1,0 +1,18 @@
+[submodule "CodeSQL"]
+	path = CodeSQL
+	url = https://github.com/himanshukm-sdei/CodeSQL.git
+[submodule "CodeAzure"]
+	path = CodeAzure
+	url = https://github.com/himanshukm-sdei/CodeAzure.git
+[submodule "CodeCSharp"]
+	path = CodeCSharp
+	url = https://github.com/himanshukm-sdei/CodeCSharp.git
+[submodule "CodeAngular"]
+	path = CodeAngular
+	url = https://github.com/himanshukm-sdei/CodeAngular.git
+[submodule "CodeAspNetCore"]
+	path = CodeAspNetCore
+	url = https://github.com/himanshukm-sdei/CodeAspNetCore.git
+[submodule "CodeMVC"]
+	path = CodeMVC
+	url = https://github.com/himanshukm-sdei/CodeMVC.git
