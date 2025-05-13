@@ -1,0 +1,6 @@
+D:\VS Projects\WorldArchiveWebApplication\SolrLibrary\bin\Debug\SolrLibrary.dll
+D:\VS Projects\WorldArchiveWebApplication\SolrLibrary\bin\Debug\SolrLibrary.pdb
+D:\VS Projects\WorldArchiveWebApplication\SolrLibrary\obj\Debug\SolrLibrary.csproj.AssemblyReference.cache
+D:\VS Projects\WorldArchiveWebApplication\SolrLibrary\obj\Debug\SolrLibrary.csproj.CoreCompileInputs.cache
+D:\VS Projects\WorldArchiveWebApplication\SolrLibrary\obj\Debug\SolrLibrary.dll
+D:\VS Projects\WorldArchiveWebApplication\SolrLibrary\obj\Debug\SolrLibrary.pdb

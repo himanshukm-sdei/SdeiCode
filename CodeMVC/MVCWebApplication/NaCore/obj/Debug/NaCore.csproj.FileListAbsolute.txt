@@ -1,0 +1,6 @@
+D:\VS Projects\WorldArchiveWebApplication\NaCore\bin\Debug\NaCore.dll
+D:\VS Projects\WorldArchiveWebApplication\NaCore\bin\Debug\NaCore.pdb
+D:\VS Projects\WorldArchiveWebApplication\NaCore\obj\Debug\NaCore.csproj.AssemblyReference.cache
+D:\VS Projects\WorldArchiveWebApplication\NaCore\obj\Debug\NaCore.csproj.CoreCompileInputs.cache
+D:\VS Projects\WorldArchiveWebApplication\NaCore\obj\Debug\NaCore.dll
+D:\VS Projects\WorldArchiveWebApplication\NaCore\obj\Debug\NaCore.pdb

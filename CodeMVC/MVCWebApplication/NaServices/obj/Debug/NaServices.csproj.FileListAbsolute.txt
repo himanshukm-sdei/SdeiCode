@@ -1,0 +1,9 @@
+D:\VS Projects\WorldArchiveWebApplication\NaServices\bin\Debug\NaServices.dll
+D:\VS Projects\WorldArchiveWebApplication\NaServices\bin\Debug\NaServices.pdb
+D:\VS Projects\WorldArchiveWebApplication\NaServices\obj\Debug\NaServices.csproj.AssemblyReference.cache
+D:\VS Projects\WorldArchiveWebApplication\NaServices\obj\Debug\NaServices.csproj.CoreCompileInputs.cache
+D:\VS Projects\WorldArchiveWebApplication\NaServices\obj\Debug\NaServices.dll
+D:\VS Projects\WorldArchiveWebApplication\NaServices\obj\Debug\NaServices.pdb
+D:\VS Projects\WorldArchiveWebApplication\NaServices\bin\Debug\NaCore.dll
+D:\VS Projects\WorldArchiveWebApplication\NaServices\bin\Debug\NaCore.pdb
+D:\VS Projects\WorldArchiveWebApplication\NaServices\obj\Debug\NaServices.csproj.CopyComplete

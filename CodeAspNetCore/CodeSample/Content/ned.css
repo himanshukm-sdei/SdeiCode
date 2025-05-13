@@ -1,0 +1,89 @@
+﻿
+/***** overide pico css *****/
+body > header, body > main, body > footer {
+    --block-spacing-vertical: calc(var(--spacing) * 1);
+}
+
+small {
+    --font-size: 0.545em;
+}
+
+[data-theme=dark] {
+    --color: hsl(205deg 4.89% 48.19%);
+    --h4-color: hsl(205deg 4.89% 48.19%);
+}
+
+
+
+
+
+
+/***** tabs *****/
+.tabs-container {
+    padding: 0;
+}
+
+.tabs-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+    .tabs label {
+        width: 100%;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem 2rem;
+        cursor: pointer;
+        background-color: var(--secondary);
+        color: white;
+        transition: background-color ease 0.3s;
+        text-align: center;
+        font-weight: 500;
+        border-bottom: 1px solid white;
+        margin-right: unset;
+    }
+
+    .tabs .tab {
+        flex-grow: 1;
+        width: 100%;
+        height: 100%;
+        display: none;
+        padding: 1rem;
+    }
+
+    .tabs [type=radio] {
+        display: none;
+    }
+
+        .tabs [type=radio]:checked + label {
+            background-color: var(--primary);
+            color: white;
+        }
+
+            .tabs [type=radio]:checked + label + .tab {
+                display: block;
+            }
+
+@media (min-width: 768px) {
+
+    .tabs label {
+        order: 1;
+        width: auto;
+        margin-right: 0.25rem;
+        border-bottom: unset;
+    }
+
+    .tabs .tab {
+        order: 9;
+        border-top: 1px solid var(--secondary);
+    }
+}

@@ -1,0 +1,186 @@
+CREATE PROC SP_SyncDB_DashboardQuotes_Sel   -- SP_SyncDB_DashboardQuotes_Sel 2025,3,'239'      
+@Year INT=2025,        
+@Month INT=2,        
+@AgencyIds NVARCHAR(3000)=''    
+AS        
+BEGIN        
+ CREATE TABLE #TempAgency (AgencyId INT)       
+          
+   INSERT INTO #TempAgency         
+   SELECT Data FROM [Sync_DB].[dbo].[fn_DelimitedStringToTable_sel]((@AgencyIds), ',')           
+   --SELECT Agencyid FROM IPAMAX30Clone..AgencyInfo WHERE Deleted=0 --and Agencyid=239             
+        
+   CREATE TABLE #TempIP (policies INT,location VARCHAR(150),agencyid INT,policyNum VARCHAR(200),MonthId INT,YearId INT)                
+          
+   INSERT INTO #TempIP (policies,location,agencyid,policyNum,MonthId,YearId)                
+select  sum(policies) as policies                  
+  ,location                 
+  ,agencyid                  
+  ,policyNum                 
+  ,MONTH(policySoldDate) MonthId        
+  ,YEAR(policySoldDate) YearId                
+from                   
+(                   
+  select   count(clientid) as policies                  
+    ,case when agencyname is null then 'location not selected' else agencyname end as location                  
+    ,agencyid                  
+ ,CAST(paydate AS DATE) policySoldDate                
+ ,policyNum                 
+  from (                  
+     select *                   
+     from (                   
+        select case when paytype = 'cptBilling' then paytype else null end as clientid                  
+          ,(select top 1 agencyname from vw_agencyinfo where agencyid = paymentinfo.agencyid) as agencyname                  
+          ,(select top 1 CASE WHEN agencyid=112 THEN 239 ELSE agencyid END  from vw_agencyinfo where agencyid = paymentinfo.agencyid) as agencyid                  
+          ,paymentinfo.paydate paydate                 
+    ,policyNum                  
+        from IPAMAX30Clone..companyinfo with (nolock)                   
+          right join (IPAMAX30Clone..clientinfo with (nolock)                   
+          right join (IPAMAX30Clone..agentinfo with (nolock)                   
+          right join IPAMAX30Clone..paymentinfo with (nolock)                   
+          on agentinfo.agentid = paymentinfo.agentid)                   
+          on clientinfo.clientid = paymentinfo.clientid)                   
+          on companyinfo.companyid = clientinfo.companyid                   
+        where   (companyinfo.deleted = 0 or companyinfo.deleted is null)                   
+          and paymentinfo.bdeleted = 0                  
+          and ISNULL(paynotes,'') not like '%iou%'                   
+          and void = 0                  
+    and MONTH(cast(paymentinfo.paydate as date))=@Month                   
+     AND  YEAR(cast(paymentinfo.paydate as date))=@Year  and policyType='Auto'                
+        union all                  
+                  
+        select  case when paytype = 'down payment' then paytype else null end as clientid                  
+          ,(select top 1 agencyname from vw_agencyinfo where agencyid = tbliou_uome.foragencyid) as agencyname                  
+          ,(select top 1 CASE WHEN agencyid=112 THEN 239 ELSE agencyid END  from vw_agencyinfo where agencyid = tbliou_uome.foragencyid) as agencyid                  
+          ,paymentinfo.paydate paydate                 
+    ,policyNum                  
+        from IPAMAX30Clone..companyinfo with (nolock)                   
+          right join (IPAMAX30Clone..clientinfo with (nolock)                   
+          right join (IPAMAX30Clone..agentinfo with (nolock)                   
+          right join IPAMAX30Clone..paymentinfo with (nolock)                   
+          on agentinfo.agentid = paymentinfo.agentid)                   
+          on clientinfo.clientid = paymentinfo.clientid)                   
+          on companyinfo.companyid = clientinfo.companyid                   
+          join IPAMAX30Clone..tbliou_uome on paymentinfo.paymentid = tbliou_uome.paymentid                  
+        where                    
+          (companyinfo.deleted = 0 or companyinfo.deleted is null)                   
+          and paymentinfo.bdeleted = 0                 
+          and void = 0                         
+          and MONTH(cast(paymentinfo.paydate as date))=@Month                   
+     AND  YEAR(cast(paymentinfo.paydate as date))=@Year  and policyType='Auto'                
+       ) as datatable                  
+    ) temp                   
+    group by agencyname, agencyid, paydate,policyNum,CAST(paydate AS DATE)                 
+                  
+)  temp2 WHERE agencyId IN (SELECT AgencyId FROM #TempAgency)                 
+group by [location], agencyid,policyNum,policySoldDate        
+        
+        
+          
+SELECT * INTO #tempTableQuotes FROM tblNewAndModifiedQuotesPresentationLayer                     
+WHERE QuoteType='new' and IsDuplicate=0 AND MonthId=@Month AND YearName=@Year AND AgencyId IN (SELECT AgencyId FROM #TempAgency)                    
+                    
+INSERT INTO #tempTableQuotes (FirstName,LastName,AgencyName,PolicyNumber,addressZip,dob1,AgencyId,QuoteType,Phone,CreateDate,TCreateDate,TModifiedDate,contact_method,cat,HomePhone,CellPhone,                    
+c_email_address,BolId,AgentNameTurborater,sales_owner_name,fw_customerName,fw_timestamp,cf_utm_source,cf_utm_campaign,BOLAgencyId,IsUpdated,IsDeleted,IsWebQuotes                    
+,PolicySoldAgency,sales_owner_email,IsDuplicate,window_Record_Id,Record_Id,Quote_Record_Id,c_State,MonthId,YearName)                    
+SELEcT FirstName,LastName,AgencyName,PolicyNumber,addressZip,dob1,AgencyId,QuoteType,Phone,CreateDate,TCreateDate,TModifiedDate,contact_method,cat,HomePhone,CellPhone,                    
+c_email_address,BolId,AgentNameTurborater,sales_owner_name,fw_customerName,fw_timestamp,cf_utm_source,cf_utm_campaign,BOLAgencyId,IsUpdated,IsDeleted,IsWebQuotes                    
+,PolicySoldAgency,sales_owner_email,IsDuplicate,window_Record_Id,Record_Id,Quote_Record_Id,c_State,MonthId,YearName                    
+ FROM tblNewAndModifiedQuotesPresentationLayer where QuoteType='modified' and ISNULL(PolicyNumber,'')!=''                     
+ AND MonthId=@Month AND YearName=@Year AND AgencyId IN (SELECT AgencyId FROM #TempAgency)             
+         
+ INSERT INTO #tempTableQuotes (FirstName,LastName,AgencyName,PolicyNumber,addressZip,dob1,AgencyId,QuoteType,Phone,CreateDate,TCreateDate,TModifiedDate,contact_method,cat,HomePhone,CellPhone,                    
+c_email_address,BolId,AgentNameTurborater,sales_owner_name,fw_customerName,fw_timestamp,cf_utm_source,cf_utm_campaign,BOLAgencyId,IsUpdated,IsDeleted,IsWebQuotes                    
+,PolicySoldAgency,sales_owner_email,IsDuplicate,window_Record_Id,Record_Id,Quote_Record_Id,c_State,MonthId,YearName)                    
+SELECT FirstName,LastName,AgencyName,PolicyNumber,addressZip,dob1,ts.AgencyId,QuoteType,Phone,CreateDate,TCreateDate,TModifiedDate,contact_method,cat,HomePhone,CellPhone,                    
+c_email_address,BolId,AgentNameTurborater,sales_owner_name,fw_customerName,fw_timestamp,cf_utm_source,cf_utm_campaign,BOLAgencyId,IsUpdated,IsDeleted,IsWebQuotes                    
+,PolicySoldAgency,sales_owner_email,IsDuplicate,window_Record_Id,Record_Id,Quote_Record_Id,c_State,MonthId,YearName                     
+FROM (                    
+ SELEcT FirstName,LastName,AgencyName,PolicyNumber,addressZip,dob1,t.AgencyId,QuoteType,Phone,CreateDate,TCreateDate,TModifiedDate,contact_method,cat,HomePhone,CellPhone,                    
+ c_email_address,BolId,AgentNameTurborater,sales_owner_name,fw_customerName,fw_timestamp,cf_utm_source,cf_utm_campaign,BOLAgencyId,IsUpdated,IsDeleted,IsWebQuotes                    
+ ,PolicySoldAgency,sales_owner_email,IsDuplicate,window_Record_Id,Record_Id,Quote_Record_Id,c_State,MonthId,YearName                    
+ ,ROW_NUMBER() OVER(PARTITION BY Record_Id,t.AgencyId ORDER BY TModifiedDate DESC) AS rownum                    
+  FROM tblNewAndModifiedQuotesPresentationLayer t         
+  INNER JOIN #TempAgency ta ON t.AgencyId=ta.AgencyId        
+  where QuoteType='modified' and IsDuplicate=0 AND ISNULL(PolicyNumber,'')=''                           
+  AND Record_Id NOT IN (SELECT Record_Id FROM #tempTableQuotes WHERE QuoteType='modified' and IsDuplicate=0 AND MonthId=@Month AND YearName=@Year AND AgencyId=t.AgencyId)                     
+  AND MonthId=@Month AND YearName=@Year             
+ ) ts where rownum=1                   
+                    
+                 
+DELETE t FROM (                  
+ select IsDuplicate,window_Record_Id,Record_Id,Quote_Record_Id,c_State,MonthId,YearName                    
+,ROW_NUMBER() OVER(PARTITION BY Record_Id,AgencyId ORDER BY TModifiedDate DESC) AS rownum                    
+ from #tempTableQuotes where QuoteType='new' and IsDuplicate=0 and ISNULL(Record_Id,0)>0 AND ISNULL(PolicyNumber,'')=''                    
+ AND MonthId=@Month AND YearName=@Year AND AgencyId IN (SELECT AgencyId FROM #TempAgency)                    
+ ) t where rownum>1         
+      
+  --TempAgency    
+  SELECT   
+  AgencyId  
+  ,AgencyName  
+  ,MonthId  
+  ,YearName  
+  ,NewWebQuotes  
+  ,NewWebSoldPolicy  
+  ,NewRetailQuotes  
+  ,NewRetailSoldPolicy  
+  ,ModifiedWebQuotes  
+  ,ModifiedWebSoldPolicy  
+  ,ModifiedRetailQuotes  
+  ,ModifiedRetailSoldPolicy  
+  ,CASE WHEN ISNULL(NewWebQuotes,0)=0 THEN 0 ELSE ROUND(((CAST(NewWebSoldPolicy AS FLOAT)/CAST(NewWebQuotes AS FLOAT))*100),0) END NewWebCR  
+  ,CASE WHEN ISNULL(ModifiedWebQuotes,0)=0 THEN 0 ELSE ROUND(((CAST(ModifiedWebSoldPolicy AS FLOAT)/CAST(ModifiedWebQuotes AS FLOAT))*100),0) END ModifiedWebCR  
+  ,CASE WHEN ISNULL(NewWebQuotes,0)=0 THEN 0 ELSE ROUND((((CAST(ModifiedWebSoldPolicy AS FLOAT)+CAST(NewWebSoldPolicy AS FLOAT))/CAST(NewWebQuotes AS FLOAT))*100),0) END CombineNewCR  
+  
+  ,CASE WHEN ISNULL(NewRetailQuotes,0)=0 THEN 0 ELSE ROUND(((CAST(NewRetailSoldPolicy AS FLOAT)/CAST(NewRetailQuotes AS FLOAT))*100),0) END NewRetailCR  
+  ,CASE WHEN ISNULL(ModifiedRetailQuotes,0)=0 THEN 0 ELSE ROUND(((CAST(ModifiedRetailSoldPolicy AS FLOAT)/CAST(ModifiedRetailQuotes AS FLOAT))*100),0) END ModifiedRetailCR  
+  ,CASE WHEN ISNULL(NewRetailQuotes,0)=0 THEN 0 ELSE ROUND((((CAST(NewRetailSoldPolicy AS FLOAT)+CAST(ModifiedRetailSoldPolicy AS FLOAT))/CAST(NewRetailQuotes AS FLOAT))*100),0) END CombineRetailCR  
+  
+  ,(NewWebQuotes+NewRetailQuotes) AS TotalQuotes  
+  ,TotalPolicies  
+  ,CASE WHEN ISNULL(NewWebQuotes+NewRetailQuotes,0)=0 THEN 0 ELSE ROUND(((CAST(TotalPolicies AS FLOAT)/(CAST(NewWebQuotes AS FLOAT)+CAST(NewRetailQuotes AS FLOAT)))*100),0) END CombineTotalCR  
+   FROM (    
+  SELECT t.AgencyId ,ai.AgencyName ,MonthId,YearName,         
+  SUM(NewWebQuotes) NewWebQuotes,SUM(NewWebSoldPolicy) NewWebSoldPolicy         
+   ,SUM(NewRetailQuotes) NewRetailQuotes        
+   ,SUM(NewRetailSoldPolicy) NewRetailSoldPolicy        
+   ,SUM(ModifiedWebQuotes) ModifiedWebQuotes        
+   ,SUM(ModifiedWebSoldPolicy) ModifiedWebSoldPolicy        
+    ,SUM(ModifiedRetailQuotes) ModifiedRetailQuotes        
+     --,SUM(ModifiedRetailSoldPolicy) ModifiedRetailSoldPolicy        
+    ,SUM(TotalPolicies) TotalPolicies        
+   ,(SUM(TotalPolicies)-(SUM(NewRetailSoldPolicy)+SUM(NewWebSoldPolicy)+SUM(ModifiedWebSoldPolicy))) ModifiedRetailSoldPolicy    
+     
+         
+   FROM (        
+   SELECT tQuotes.AgencyId,tQuotes.MonthId,tQuotes.YearName        
+   ,NewWebQuotes,NewWebSoldPolicy,NewRetailQuotes,NewRetailSoldPolicy        
+   ,ModifiedWebQuotes,ModifiedWebSoldPolicy,ModifiedRetailQuotes,ModifiedRetailSoldPolicy        
+   ,TotalPolicies        
+    FROM #TempAgency AI         
+   LEFT JOIN (        
+     SELECT AgencyId,MonthId,YearName,        
+     SUM(CASE WHEN ISNULL(IsWebQuotes,0)=1 AND QuoteType='new' THEN 1 ELSE 0 END) NewWebQuotes        
+     ,SUM(CASE WHEN ISNULL(IsWebQuotes,0)=1 AND QuoteType='modified' THEN 1 ELSE 0 END) ModifiedWebQuotes        
+     ,SUM(CASE WHEN ISNULL(IsWebQuotes,0)=0 AND QuoteType='new' THEN 1 ELSE 0 END) NewRetailQuotes        
+     ,SUM(CASE WHEN ISNULL(IsWebQuotes,0)=0 AND QuoteType='modified' THEN 1 ELSE 0 END) ModifiedRetailQuotes        
+     ,SUM(CASE WHEN ISNULL(IsWebQuotes,0)=1 AND QuoteType='new' AND ISNULL(PolicyNumber,'')!='' THEN 1 ELSE 0 END) NewWebSoldPolicy        
+     ,SUM(CASE WHEN ISNULL(IsWebQuotes,0)=1 AND QuoteType='modified'  AND ISNULL(PolicyNumber,'')!='' THEN 1 ELSE 0 END) ModifiedWebSoldPolicy        
+     ,SUM(CASE WHEN ISNULL(IsWebQuotes,0)=0 AND QuoteType='new'  AND ISNULL(PolicyNumber,'')!='' THEN 1 ELSE 0 END) NewRetailSoldPolicy        
+     ,SUM(CASE WHEN ISNULL(IsWebQuotes,0)=0 AND QuoteType='modified'  AND ISNULL(PolicyNumber,'')!='' THEN 1 ELSE 0 END) ModifiedRetailSoldPolicy        
+      FROM #tempTableQuotes  GROUP BY  AgencyId,MonthId,YearName        
+  ) tQuotes ON AI.AgencyId=tQuotes.AgencyId        
+  LEFT JOIN (        
+    select SUM(Policies)TotalPolicies,Location,AgencyId,MonthId,YearId from #TempIP  Group By Location,AgencyId,MonthId,YearId         
+  ) tPolicy ON AI.AgencyId=tPolicy.AgencyId AND tQuotes.MonthId=tPolicy.MonthId AND tQuotes.YearName=tPolicy.YearId        
+           
+   ) t INNER JOIN IPAMAX30Clone..AgencyInfo ai ON t.AgencyId=ai.AgencyId WHERE t.AgencyId IS NOT NULL GROUP BY t.AgencyId,MonthId,YearName,ai.AgencyName   
+   ) temp       ORDER BY temp.AgencyName   
+        
+     -- SP_SyncDB_DashboardQuotes_Sel 2025,3,'239'      
+        
+DROP TABLE #tempTableQuotes         
+DROP TABLE #TempAgency        
+DROP TABLE #TempIP        
+END

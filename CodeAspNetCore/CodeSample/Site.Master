@@ -1,0 +1,51 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="SampleCode.SiteMaster" %>
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head runat="server">
+    <title>Ned CRM</title>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="Content/Styles/style.css" rel="stylesheet" />
+    <link href="Content/Styles/pico.css" rel="stylesheet" />
+    <script src="../../Scripts/Master/MasterScriptV1.js"></script>
+    <script src="../../Scripts/Master/MasterScriptV2.js"></script>
+    <script src="../../Scripts/Master/MasterScriptV3.js"></script>
+    <script src="../../Scripts/Master/MasterScriptV4.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.12.5/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form runat="server">
+        <header class="container-fluid header">
+            <nav>
+                <ul>
+                    <li class="brand-logo">
+                        <h1>Sample <strong>Code</strong></h1>
+                    </li>
+                </ul>
+                <ul>
+                    <li><a href="/Pages/CompanyUI/CompanyList.aspx">Companies</a></li>
+
+                    <li>
+                        <asp:LinkButton CssClass="logout-btn" ID="lnkLogout" runat="server" Text="<i class='fa fa-sign-out' aria-hidden='true'></i> Logout" OnClick="btnLogout_Click" />
+                    </li>
+                </ul>
+            </nav>
+            <asp:ContentPlaceHolder ID="HeaderCph" runat="server" />
+        </header>
+        <main class="container-fluid">
+            <asp:ContentPlaceHolder ID="MainCph" runat="server" />
+        </main>
+    </form>
+    <footer class="footer-sec">
+        <asp:ContentPlaceHolder ID="FooterCph" runat="server" />
+    </footer>
+    <asp:ContentPlaceHolder ID="ScriptsCph" runat="server" />
+</body>
+</html>
+
+

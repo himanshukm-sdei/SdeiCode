@@ -1,0 +1,484 @@
+﻿/* Custom CSS */
+/* Grid */
+body > main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: calc(100vh - 7rem);
+    padding: 1rem 0;
+}
+
+article {
+    padding: 0;
+    overflow: hidden;
+}
+
+    article div {
+        padding: 1rem;
+    }
+
+@media (min-width: 576px) {
+    body > main {
+        padding: 1.25rem 0;
+    }
+
+    article div {
+        padding: 1.25rem;
+    }
+}
+
+@media (min-width: 768px) {
+    body > main {
+        padding: 1.5rem 0;
+    }
+
+    article div {
+        padding: 1.5rem;
+    }
+}
+
+@media (min-width: 992px) {
+    body > main {
+        padding: 1.75rem 0;
+    }
+
+    article div {
+        padding: 1.75rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    body > main {
+        padding: 2rem 0;
+    }
+
+    article div {
+        padding: 2rem;
+    }
+}
+
+/* Nav */
+summary[role="link"].secondary:is([aria-current], :hover, :active, :focus) {
+    background-color: transparent;
+    color: var(--secondary-hover);
+}
+
+/* Hero Image */
+article div:nth-of-type(2) {
+    display: none;
+    background-color: #374956;
+    background-image: url("../Images/alessio-soggetti-8jeWeKdygfk-unsplash-1000x1200.jpg");
+    background-position: center;
+    background-size: cover;
+}
+
+@media (min-width: 992px) {
+    .grid > div:nth-of-type(2) {
+        display: block;
+    }
+}
+/* Footer */
+body > footer {
+    padding: 1rem 0;
+}
+
+.head-sec h1 {
+    margin-bottom: 20px;
+}
+
+.regi-here-link {
+    font-size: 14px;
+}
+
+.cust-md-6 {
+    width: 40%;
+}
+
+#loginform {
+    margin-bottom: 0px;
+}
+
+.login-page {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: calc(100vh - 0px);
+    overflow: hidden;
+    background: beige;
+}
+
+    .login-page .logo-sec {
+        padding: 15px;
+        position: absolute;
+    }
+
+.login-card {
+    background: linear-gradient(90deg, white 50%, white 50%);
+    border: 6px solid #0000008c;
+    border-radius: 0px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+    .login-card .form-sec {
+        width: 100%;
+        padding: 30px 45px;
+    }
+
+        .login-card .form-sec input:not([type=checkbox], [type=submit], [type=submit]) {
+            height: 40px;
+            background: #f5f5f5;
+        }
+
+        .login-card .form-sec input:not([type=text], [type=password], [type=checkbox]) {
+            height: 35px;
+        }
+
+        .login-card .form-sec .head-sec img {
+            margin-bottom: 15px;
+        }
+
+    .login-card .head-sec h1 {
+        font-size: 24px;
+    }
+
+#form2 {
+    margin-bottom: 0px;
+}
+
+.register-page {
+    background-image: url('../Images/background-sydney-harbour-night.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: calc(100vh - 0px);
+}
+
+.register-card {
+    background: linear-gradient(90deg, white 50%, white 50%);
+    border: 6px solid #0000008c;
+    border-radius: 0px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+    .register-card .form-sec {
+        width: 100%;
+        padding: 30px 45px;
+        max-height: 80vh;
+        overflow: auto;
+    }
+
+        .register-card .form-sec .head-sec img {
+            margin-bottom: 15px;
+        }
+
+        .register-card .form-sec input:not([type=checkbox], [type=submit], [type=submit]) {
+            height: 40px;
+            background: #f5f5f5;
+        }
+
+        .register-card .form-sec input:not([type=text], [type=password], [type=checkbox]) {
+            height: 35px;
+        }
+/* Custom css */
+
+/* Company CSS */
+select {
+    width: 20em;
+}
+
+.separate-line {
+    border-top: 1px solid #ccc;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.created-by-custom-ddl {
+    position: absolute;
+    height: 35px;
+    width: 35px;
+    margin-left: -32px;
+}
+
+.custom-styly-dropdwon-ul {
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(203, 203, 203);
+    overflow: hidden auto;
+    margin-top: -14px;
+    border-radius: 7px;
+    padding: 4px 6px;
+}
+
+    .custom-styly-dropdwon-ul li {
+        font-size: 14px;
+        box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+.custom-shared-with-search-selected {
+    position: absolute;
+    font-size: 12px;
+    padding: 8px;
+    font-weight: bold;
+}
+
+    .custom-shared-with-search-selected.add-focus-custom-style {
+        border-color: #66B2F8;
+        -moz-box-shadow: 0 0 0.5em #66CCFF;
+        -webkit-box-shadow: 0 0 0.5em #66CCFF;
+        box-shadow: 0 0 0.5em #66CCFF;
+        outline-style: none;
+        margin-top: -20px;
+        z-index: 1;
+        background: #f9f7f7;
+        padding: 2px 5px;
+    }
+
+.custom-box {
+    border: 2px solid #ccc; /* Border style */
+    padding: 10px; /* Padding inside the box */
+
+    font-size: 16px; /* Font size */
+    float: left;
+    width: 100%; /* Width of the box */
+    margin: 20px auto; /* Center the box horizontally with margin */
+}
+
+.tags_list_red {
+    list-style: none;
+    padding: 0;
+    font-size: 13px;
+    margin-bottom: 0;
+}
+
+    .tags_list_red li {
+        display: inline-block;
+        margin-right: 0.5rem;
+        color: #ff6262;
+        margin-bottom: 0.5rem;
+        border: 1px solid #ff6262;
+        padding: 2px 12px;
+        border-radius: 3px;
+    }
+
+.tags_list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 0;
+    font-size: 13px;
+}
+
+    .tags_list li {
+        display: inline-block;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+        border: 1px solid #888;
+        padding: 2px 12px;
+        border-radius: 3px;
+    }
+
+.contact_box {
+    border: 1px solid #999;
+    padding: 0px 15px;
+    position: relative;
+}
+
+.cont_show {
+    position: absolute;
+    text-align: center;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    bottom: -1rem;
+    background: #dedede;
+    padding: 0;
+    font-size: 14px;
+}
+
+span.removeTag {
+    margin-left: 10px;
+    cursor: pointer;
+    color: red;
+}
+
+.addTag {
+    margin-left: 10px;
+    cursor: pointer;
+    color: blue;
+}
+
+.extra-contact-info-custom {
+    color: #404040;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: move;
+    display: block;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+    background-color: #f9f9f9;
+    background-image: -webkit-linear-gradient(top,#ffffff 0%,#f3f3f3 100%);
+    padding: 15px 30px;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.extra-contact-info-custom-buttom {
+    font-size: 16px;
+    background-color: #f9f9f9;
+    background-image: -webkit-linear-gradient(top,#ffffff 0%,#f3f3f3 100%);
+    height: 24px;
+    line-height: 21px;
+    border-top: 1px solid #bababa;
+    color: #404040;
+    -webkit-text-size-adjust: none;
+    text-align: center;
+}
+
+.custom-hide-icon-style {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    margin-top: -5px;
+}
+
+.hidden {
+    display: none;
+}
+
+.tab-pane.fade.show.active.custom-hidden {
+    display: none;
+}
+/* Company CSS */
+
+
+/***** overide pico css *****/
+body > header, body > main, body > footer {
+    --block-spacing-vertical: calc(var(--spacing) * 1);
+}
+
+small {
+    --font-size: 0.545em;
+}
+
+[data-theme=dark] {
+    --color: hsl(205deg 4.89% 48.19%);
+    --h4-color: hsl(205deg 4.89% 48.19%);
+}
+
+
+
+
+
+
+/***** tabs *****/
+.tabs-container {
+    padding: 0;
+}
+
+.tabs-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+    .tabs label {
+        width: 100%;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem 2rem;
+        cursor: pointer;
+        background-color: var(--secondary);
+        color: white;
+        transition: background-color ease 0.3s;
+        text-align: center;
+        font-weight: 500;
+        border-bottom: 1px solid white;
+        margin-right: unset;
+    }
+
+    .tabs .tab {
+        flex-grow: 1;
+        width: 100%;
+        height: 100%;
+        display: none;
+        padding: 1rem;
+    }
+
+    .tabs [type=radio] {
+        display: none;
+    }
+
+        .tabs [type=radio]:checked + label {
+            background-color: var(--primary);
+            color: white;
+        }
+
+            .tabs [type=radio]:checked + label + .tab {
+                display: block;
+            }
+
+@media (min-width: 768px) {
+
+    .tabs label {
+        order: 1;
+        width: auto;
+        margin-right: 0.25rem;
+        border-bottom: unset;
+    }
+
+    .tabs .tab {
+        order: 9;
+        border-top: 1px solid var(--secondary);
+    }
+}
+
+.edit-text {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Style for the "..." button */
+.ellipsis-button {
+    cursor: pointer;
+}
+
+/* Style for the options panel */
+.options-panel {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+
+    .options-panel a {
+        display: block;
+        padding: 5px 10px;
+        text-decoration: none;
+        color: #333;
+    }
+
+        .options-panel a:hover {
+            background-color: #f0f0f0;
+        }
+
+/* Show options panel when hovering over the "..." button */
+.action-container:hover .options-panel {
+    display: block;
+}
+
+.red-label-auth-auth {
+    color: red;
+}

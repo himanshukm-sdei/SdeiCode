@@ -1,0 +1,204 @@
+<div>
+    <h3 class="page-title head-wrapper">
+        <button class="pull-left" type="button" [disabled]="displayWait" (click)="returnToPreviousPage()"><i
+                class="glyphicon glyphicon-circle-arrow-left"></i> Return</button>
+        <span class="glyphicon glyphicon-list-alt"></span>&nbsp;<b>{{name}}</b>
+    </h3>
+    <div>
+        <div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <h5>Report Options</h5>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="col-xs-5 left-filter-column">
+                        <label id="search-table-label" for="search-table-input">Search</label>
+                    </div>
+                    <div id="search" class="col-xs-7 right-filter-column">
+                        <input [disabled]="displayWait" type="search" class="form-control" id="search-table-input"
+                            (input)="onSearchChange($event.target.value)" [(ngModel)]="searchValue"
+                            placeholder="Account Number and Description..." (keypress)="setMaxLength($event,20)" />
+                        <input [disabled]="displayWait" type="button" class="clearSearch" value="x"
+                            onclick="document.getElementById('search-table-input').value = ''"
+                            (click)="onSearchChange('')" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="col-xs-6 left-filter-column">
+                        <label for="don">Donations Allowed</label>
+                    </div>
+                    <div id="don" class="col-xs-6 right-filter-column">
+                        <select class="form-control" [disabled]="displayWait" [(ngModel)]="donationsAllowed">
+                            <option [value]=2>Select</option>
+                            <option [value]=1>Yes</option>
+                            <option [value]=0>No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="col-xs-6 left-filter-column">
+                        <label for="drp">Included in Donors Rpts</label>
+                    </div>
+                    <div id="drp" class="col-xs-6 right-filter-column">
+                        <select class="form-control" [disabled]="displayWait" [(ngModel)]="includedDonorRpt">
+                            <option [value]=2>Select</option>
+                            <option [value]=1>Yes</option>
+                            <option [value]=0>No</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="col-xs-5 left-filter-column">
+                        <label for="accountType">Account Type</label>
+                    </div>
+                    <div id="accountType" class="col-xs-7 right-filter-column">
+                        <select class="form-control" [disabled]="displayWait" [(ngModel)]="accountType">
+                            <option value="Select">Select</option>
+                            <option value="Asset">Asset</option>
+                            <option value="Bank">Bank</option>
+                            <option value="Expense">Expense</option>
+                            <option value="Income">Income</option>
+                            <option value="Liability">Liability</option>
+                            <option value="Restricted Funds">Restricted Funds</option>
+                            <option value="Retained Earnings">Retained Earnings</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="col-xs-6 left-filter-column">
+                        <label for="frp">Included in Fund Raising Rpts</label>
+                    </div>
+                    <div id="frp" class="col-xs-6 right-filter-column">
+                        <select class="form-control" [disabled]="displayWait" [(ngModel)]="includedFundRaisingRpt">
+                            <option [value]=2>Select</option>
+                            <option [value]=1>Yes</option>
+                            <option [value]=0>No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="col-xs-6 left-filter-column">
+                        <label for="isActive">Is Active</label>
+                    </div>
+                    <div id="isActive" class="col-xs-6 right-filter-column">
+                        <select class="form-control" [disabled]="displayWait" [(ngModel)]="isActive">
+                            <option [value]=2>Select</option>
+                            <option [value]=1>Yes</option>
+                            <option [value]=0>No</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="col-xs-5 left-filter-column">
+                        <label for="taxDeductibility">Tax Deductibility</label>
+                    </div>
+                    <div id="taxDeductibility" class="col-xs-7 right-filter-column">
+                        <select class="form-control" [disabled]="displayWait" [(ngModel)]="taxDeductibility">
+                            <option value="Select">Select</option>
+                            <option value="Couvert">Couvert</option>
+                            <option value="Non-Deductible">Non-Deductible</option>
+                            <option value="Deductible">Deductible</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <span><i><b>*Don - Allow Donations</b></i></span>
+                    <span><i><b>*Drp - Include on Donors Reports</b></i></span>
+                    <span><i><b>*Frp - Include on Fund Raising Reports</b></i></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-7 col-md-12 col-sm-12">
+                    <button [disabled]="displayWait" class="btn btn-danger" (click)="clearFilters()"><span
+                            class="glyphicon glyphicon-remove-circle"></span> Clear Filter</button>
+                    <button [disabled]="displayWait" class="btn btn-success btnleftMargin"
+                        (click)="getChartOfAccounts()"><span class="glyphicon glyphicon-play"></span> Run
+                        Report</button>
+                    <button [disabled]="displayWait" class="btn btn-success btnleftMargin" data-toggle="modal"
+                        data-target="#chartOfAccountsModal"><span class="glyphicon glyphicon-plus"></span> Add New
+                        Account</button>
+                    <!-- Modal -->
+                    <app-chart-of-accounts-modal (editAccountCompleted)="onAccountCompleted()" [isAddNewMode]="true"
+                        [chartOfAccounts]="chartOfAccounts" [modalId]="'chartOfAccountsModal'" [account]="newAccount"
+                        [bankAccounts]="bankAccounts" [listOfFunds]="listOfFunds"
+                        [budgetCategories]="budgetCategories"></app-chart-of-accounts-modal>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-group my-btn-group-responsive">
+            <button [disabled]="displayWait" type="button" class="btn btn-primary" (click)="exportToCSV(true)"
+                title="Export Filtered Records To CSV"><span class="glyphicon glyphicon-export"></span><span> Export
+                    Filtered Records To CSV </span></button>
+            <button [disabled]="displayWait" type="button" class="btn btn-primary" (click)="exportToCSV(false)"
+                title="Export All Records To CSV"><span class="glyphicon glyphicon-export"></span><span> Export All
+                    Records To CSV</span></button>
+        </div>
+
+        <div class="table-outter wrapper">
+            <!--for pagination-->
+            <jw-pagination [hidden]="chartOfAccounts.length<=75" [items]="chartOfAccounts" [pageSize]="75"
+                (changePage)="onChangePage($event)"></jw-pagination>
+            <table class="table table-condensed rightTable">
+                <thead>
+                    <tr>
+                        <th style="min-width:40px;">#</th>
+                        <th style="min-width:80px;">Number</th>
+                        <th style="min-width:200px;">Description</th>
+                        <th style="min-width:150px;">Type</th>
+                        <th style="min-width:90px;">Bank</th>
+                        <th style="min-width:90px;">Fund</th>
+                        <th style="min-width:90px;">Budget</th>
+                        <th style="min-width:170px;">Tax Deductibility</th>
+                        <th style="min-width:70px;">Don</th>
+                        <th style="min-width:70px;">Drp</th>
+                        <th style="min-width:70px;">Frp</th>
+                        <th style="min-width:70px;">Active</th>
+                        <th style="min-width:20px;">Edit</th>
+                    </tr>
+                </thead>
+                <tbody style="height:auto">
+                    <ng-container *ngFor="let account of pageOfItems; let in = index">
+                        <tr>
+                            <th style="min-width:40px;">{{getIndex(account.DictionaryAccountGUID) + 1}}</th>
+                            <td style="min-width:80px;">{{account.Number}}</td>
+                            <td style="min-width:200px;">{{account.Description}}</td>
+                            <td style="min-width:150px;">{{account.AccountType}}</td>
+                            <td style="min-width:90px;">{{account.AssociatedBankAccountGUID}}</td>
+                            <td style="min-width:90px;">{{account.FundName}}</td>
+                            <td style="min-width:90px;">{{account.BudgetName}}</td>
+                            <td *ngIf="account.TaxDeductibility=='Couvert'" style="min-width:170px;">
+                                {{account.TaxDeductibility}} ({{account.CouvertAmount | number:'1.2-2'}})</td>
+                            <td *ngIf="account.TaxDeductibility!='Couvert'" style="min-width:170px;">
+                                {{account.TaxDeductibility}}</td>
+                            <td style="min-width:70px;">{{account.AllowDonations ? 'Yes' : 'No'}}</td>
+                            <td style="min-width:70px;">{{account.IncludeOnDonorsReport ? 'Yes' : 'No'}}</td>
+                            <td style="min-width:70px;">{{account.IncludeOnFundRaisingReport ? 'Yes' : 'No'}}</td>
+                            <td style="min-width:70px;">{{account.IsActive ? 'Yes' : 'No'}}</td>
+                            <td style="min-width:20px;"><button [disabled]="account.Number=='Q99999'" type="button"
+                                    class="btn btn-success" data-toggle="modal"
+                                    [attr.data-target]="'#chartOfAccountsModal' + in">Edit</button></td>
+                            <!-- Modal -->
+                            <app-chart-of-accounts-modal (editAccountCompleted)="onAccountCompleted()"
+                                [modalId]="'chartOfAccountsModal' + in" [chartOfAccounts]="chartOfAccounts"
+                                [isAddNewMode]="false" [account]="account" [bankAccounts]="bankAccounts"
+                                [listOfFunds]="listOfFunds"
+                                [budgetCategories]="budgetCategories"></app-chart-of-accounts-modal>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </div>
+        <div *ngIf="numberOfRecords>0">
+            <h4 style="display:inline;">(Total Entries: {{numberOfRecords}})</h4>
+        </div>
+    </div>
+</div>
