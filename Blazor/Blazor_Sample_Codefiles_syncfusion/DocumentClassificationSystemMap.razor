@@ -1,0 +1,60 @@
+﻿@page "/DocumentClassificationSystemMap"
+@rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
+@using TrainedAi.Mortgage.Configuration.Web.Components.Shared
+@using TrainedAi.Mortgage.Configuration.Web.Models.DocumentClassification
+@using TrainedAi.Mortgage.Configuration.Web.Models.DocumentClassificationModel
+@using TrainedAi.Mortgage.Configuration.Web.Models.DocumentClassificationSystemMap
+@inject ModelComparisonService ModelComparisonService
+@inject NavigationManager NavigationManager
+@inject ClassificationService ClassificationService
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject HttpServicesClient HttpService
+@attribute [Authorize]
+<PageTitle>Document Indexing - System Mappings</PageTitle>
+<h3>Document Indexing - System Mappings</h3>
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-success">
+        @message
+    </div>
+}
+<SfProgressBar Type="ProgressType.Circular" Value="20" Height="60" IsIndeterminate="true" Minimum="0" Maximum="100" Visible="@loaderVisible">
+    <ProgressBarAnimation Enable="true"></ProgressBarAnimation>
+</SfProgressBar>
+@if (!loaderVisible)
+{
+    <SfGrid ID="Grid" @ref="DcsmGrid" DataSource="@gridDocumentClassificationSystemMap" AllowResizing="true" AllowGrouping="true" AllowSorting="true" AllowFiltering="true" AllowPaging="true" Toolbar="@(new List<string>() { "Add", "Edit","Delete","Cancel", "Update","ExcelExport" })" AllowExcelExport="true">
+        <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true" Mode="EditMode.Normal" ShowConfirmDialog="true" ShowDeleteConfirmDialog="true"></GridEditSettings>
+        <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+        <GridColumns>
+            <GridColumn Field=@nameof(DocumentClassificationSystemMapModel.Id) HeaderText="DocumentClassificationSystemMapId" TextAlign="TextAlign.Left" AllowEditing="false" AllowAdding="false" Visible="false"></GridColumn>
+            <GridColumn Field=@nameof(DocumentClassificationSystemMapModel.SystemIdentifier) TextAlign="TextAlign.Center" HeaderText="System Identifier"></GridColumn>
+            <GridColumn Field=@nameof(DocumentClassificationSystemMapModel.AutoClassifyThreshold) TextAlign="TextAlign.Center" HeaderText="Auto Classify Threshold" Visible="true" Width="150"></GridColumn>
+            <GridColumn Field="@nameof(DocumentClassificationSystemMapModel.ModelName)" HeaderText="Model Name" EditType="EditType.DropDownEdit" TextAlign="TextAlign.Center" Width="150">
+                <EditTemplate>
+                    <SfDropDownList TValue="int" TItem="DocumentClassificationsModel"
+                    Placeholder="Select Model"
+                    DataSource="@documentClassificationsModelddl"
+                    @bind-Value="((context as DocumentClassificationSystemMapModel).DocumentClassificationModelId)">
+                        <DropDownListFieldSettings Value="Id" Text="ModelName"></DropDownListFieldSettings>
+                    </SfDropDownList>
+                    <ValidationMessage For="() => (context as DocumentClassificationSystemMapModel).DocumentClassificationModelId"></ValidationMessage>
+                </EditTemplate>
+            </GridColumn>
+
+            <GridColumn Field=@nameof(DocumentClassificationSystemMapModel.ClassificationName) HeaderText="Classification Name" EditType="EditType.DropDownEdit" TextAlign="TextAlign.Center">
+                <EditTemplate>
+                    <SfDropDownList TValue="int" TItem="DocumentsClassificationModel" Placeholder="Select Classification" DataSource="@documentClassificationsddl" @bind-Value="@((context as DocumentClassificationSystemMapModel).DocumentClassificationId)">
+                        <DropDownListFieldSettings Value="Id" Text="ClassificationName"></DropDownListFieldSettings>
+                    </SfDropDownList>
+                    <ValidationMessage For="() => (context as DocumentClassificationSystemMapModel).DocumentClassificationId"></ValidationMessage>
+                </EditTemplate>
+            </GridColumn>
+        </GridColumns>
+        <GridEvents OnToolbarClick="ToolbarClickHandler" OnActionBegin="ActionBeginHandler" TValue="DocumentClassificationSystemMapModel"></GridEvents>
+    </SfGrid>
+}
+<UnavailableFeature isDialogVisible="@isDialogVisible" IsVisibleChanged="@OnDialogVisibilityChanged" />

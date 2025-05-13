@@ -1,0 +1,66 @@
+﻿@page "/DocumentClassificationModel"
+@rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
+@inject HttpClient Http
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using TrainedAi.Mortgage.Configuration.Web.Components.Shared
+@using TrainedAi.Mortgage.Configuration.Web.Models.DocumentClassificationModel
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IConfiguration Configuration
+@inject HttpServicesClient HttpServicesClient
+@inject ModelComparisonService ModelComparisonService
+@attribute [Authorize]
+<PageTitle>Document Indexing - Models</PageTitle>
+<h3>Document Indexing - Models</h3>
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-success">
+        @message
+    </div>
+}
+<SfProgressBar Type="ProgressType.Circular" Value="20" Height="60" IsIndeterminate="true" Minimum="0" Maximum="100" Visible="@loaderVisible">
+    <ProgressBarAnimation Enable="true"></ProgressBarAnimation>
+</SfProgressBar>
+@if (!loaderVisible)
+{
+    <SfGrid ID="Grid" @ref="DcmGrid" DataSource="@_documentModels" AllowGrouping="true" AllowResizing="true" AllowSorting="true" AllowFiltering="true" AllowPaging="true" Toolbar="@(new List<string>() { "Add", "Edit","Delete", "Cancel", "Update","ExcelExport" })" AllowExcelExport="true">
+        <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true" Mode="EditMode.Normal" ShowConfirmDialog="true" ShowDeleteConfirmDialog="true"></GridEditSettings>
+        <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+        <GridEvents OnToolbarClick="ToolbarClickHandler" OnActionBegin="ActionBeginHandler" TValue="DocumentClassificationModalGrid"></GridEvents>
+        <GridColumns>
+            <GridColumn  Field=@nameof(DocumentClassificationModalGrid.Id) HeaderText="ID" TextAlign="TextAlign.Center"  AllowEditing="false" AllowAdding="false" Visible="false"></GridColumn>
+            <GridColumn Field=@nameof(DocumentClassificationModalGrid.ModelName) HeaderText="Model Name" Width="150"></GridColumn>
+            <GridColumn Field=@nameof(DocumentClassificationModalGrid.ModelDisplayName) HeaderText="Display Name" Width="150"></GridColumn>
+            <GridColumn Field=@nameof(DocumentClassificationModalGrid.ModelIdentifier) HeaderText="Identifier" Width="150"></GridColumn>
+            <GridColumn Field=@nameof(DocumentClassificationModalGrid.ApiVersion) HeaderText="Api Version" Width="150"></GridColumn>
+            <!-- Primary Color with Visual Indicator -->
+            <GridColumn Field=@nameof(DocumentClassificationModalGrid.PrimaryColor) HeaderText="Primary Color" Width="150">
+                <Template>
+                    @{
+                        var color = (context as DocumentClassificationModalGrid).PrimaryColor; // Access the PrimaryColor HEX value
+                        var circleStyle = $"background-color: {color}; width: 20px; height: 20px; border-radius: 50%; display: inline-block; margin-right: 15px;";
+                    }
+                    <span style="@circleStyle"></span>@((context as DocumentClassificationModalGrid).PrimaryColor)
+                </Template>
+            </GridColumn>
+
+            <!-- Secondary Color with Visual Indicator -->
+            <GridColumn Field=@nameof(DocumentClassificationModalGrid.SecondaryColor) HeaderText="Secondary Color" Width="150">
+                <Template>
+                    @{
+                        var color = (context as DocumentClassificationModalGrid).SecondaryColor; ; // Access the SecondaryColor HEX value
+                        var circleStyle = $"background-color: {color}; width: 20px; height: 20px; border-radius: 50%; display: inline-block; margin-right: 15px;";
+                    }
+                    <span style="@circleStyle"></span>@((context as DocumentClassificationModalGrid).SecondaryColor)
+                </Template>
+            </GridColumn>
+            <GridColumn Field=@nameof(DocumentClassificationModalGrid.AutoClassifyLowDocumentClassificationId) HeaderText="Auto Classify Low Document Classification Id" Width="150"></GridColumn>
+            <GridColumn Field=@nameof(DocumentClassificationModalGrid.ConfidenceMinimum) HeaderText="Confidence Minimum" Width="150"></GridColumn>
+            <GridColumn Field=@nameof(DocumentClassificationModalGrid.AutoClassifyLowThreshold) HeaderText="Auto Classify Low Threshold" Width="150"></GridColumn>
+            <GridColumn Field=@nameof(DocumentClassificationModalGrid.CombineLowThresholdDocuments) HeaderText="Combine Low Threshold Documents" Width="150"></GridColumn>
+        </GridColumns>
+        @* <GridEvents OnActionBegin="ActionBeginHandler" TValue="DocumentClassificationModalGrid"></GridEvents> *@
+    </SfGrid>
+}
+<UnavailableFeature isDialogVisible="@isDialogVisible" IsVisibleChanged="@OnDialogVisibilityChanged" />

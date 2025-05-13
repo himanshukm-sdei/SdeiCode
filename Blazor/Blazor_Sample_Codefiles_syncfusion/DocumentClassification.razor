@@ -1,0 +1,50 @@
+﻿@page "/DocumentClassification"
+@rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using TrainedAi.Mortgage.Configuration.Web.Components.Shared
+@using TrainedAi.Mortgage.Configuration.Web.Models.DocumentClassification
+@using TrainedAi.Mortgage.Configuration.Web.Models.DocumentClassificationCategory
+@using TrainedAi.Mortgage.Configuration.Web.Models.Enum
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject HttpServicesClient HttpService
+@inject ClassificationService ClassificationService
+@inject ModelComparisonService ModelComparisonService
+
+@attribute [Authorize]
+<PageTitle>Document Indexing -  Classifications</PageTitle>
+<h3>Document Indexing -  Classifications</h3>
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-success">
+        @message
+    </div>
+}
+<SfProgressBar Type="ProgressType.Circular" Value="20" Height="60" IsIndeterminate="true" Minimum="0" Maximum="100" Visible="@loaderVisible">
+    <ProgressBarAnimation Enable="true"></ProgressBarAnimation>
+</SfProgressBar>
+@if (!loaderVisible)
+{
+    <SfGrid ID="Grid" @ref="GridRef" DataSource="@gridDocumentClassification" AllowResizing="true" AllowGrouping="true" AllowSorting="true" AllowFiltering="true" AllowPaging="true" Toolbar="@(new List<string>() { "Add", "Edit","Delete", "Cancel", "Update","ExcelExport" })" AllowExcelExport="true">
+        <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true" Mode="EditMode.Normal" ShowConfirmDialog="true" ShowDeleteConfirmDialog="true"></GridEditSettings>
+        <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+        <GridEvents OnToolbarClick="ToolbarClickHandler" OnActionBegin="ActionBeginHandler" TValue="DocumentsClassificationModel"></GridEvents>
+
+        <GridColumns>
+            <GridColumn Field=@nameof(DocumentsClassificationModel.Id) HeaderText="Classification Id" TextAlign="TextAlign.Left" AllowEditing="false" AllowAdding="false" Visible="false"></GridColumn>
+            <GridColumn Field=@nameof(DocumentsClassificationModel.ClassificationName) TextAlign="TextAlign.Center" HeaderText="Classification Name" ></GridColumn>
+            <GridColumn Field=@nameof(DocumentsClassificationModel.DocumentType) TextAlign="TextAlign.Center" HeaderText="Document Type"></GridColumn>
+            <GridColumn Field=@nameof(DocumentsClassificationModel.CategoryDescription) HeaderText="Category Description" EditType="EditType.DropDownEdit" TextAlign="TextAlign.Center">
+                <EditTemplate>
+                    <SfDropDownList TValue="int" TItem="DocumentClassificationCategoryModel" Placeholder="Select Category" DataSource="@documentClassificationCategoryModel" @bind-Value="@((context as DocumentsClassificationModel).DocumentClassificationCategoryId)">
+                        <DropDownListFieldSettings Value="Id" Text="DisplayName"></DropDownListFieldSettings>
+                    </SfDropDownList>
+                    <ValidationMessage For="() => (context as DocumentsClassificationModel).DocumentClassificationCategoryId"></ValidationMessage>
+                </EditTemplate>
+
+            </GridColumn>
+        </GridColumns>
+    </SfGrid>
+}
+<UnavailableFeature isDialogVisible="@isDialogVisible" IsVisibleChanged="@OnDialogVisibilityChanged" />

@@ -1,0 +1,38 @@
+﻿@page "/DocumentClassificationCategory"
+@rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using TrainedAi.Mortgage.Configuration.Web.Components.Shared
+@using TrainedAi.Mortgage.Configuration.Web.Models.DocumentClassificationCategory
+@using TrainedAi.Mortgage.Configuration.Web.Models.Enum
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject HttpServicesClient HttpServicesClient
+@inject ModelComparisonService ModelComparisonService
+@attribute [Authorize]
+<PageTitle>Document Indexing - Categories</PageTitle>
+<h3>Document Indexing - Categories</h3>
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-success">
+        @message
+    </div>
+}
+<SfProgressBar Type="ProgressType.Circular" Value="20" Height="60" IsIndeterminate="true" Minimum="0" Maximum="100" Visible="@loaderVisible">
+    <ProgressBarAnimation Enable="true"></ProgressBarAnimation>
+</SfProgressBar>
+@if (!loaderVisible)
+{
+    <SfGrid ID="Grid" @ref="DccGrid" DataSource="@_gridDocumentClassificationCategory" AllowResizing="true" AllowGrouping="true" AllowSorting="true" AllowFiltering="true" AllowPaging="true" Toolbar="@(new List<string>() { "Add", "Edit","Delete", "Cancel", "Update","ExcelExport" })" AllowExcelExport="true">
+        <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+        <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true" Mode="EditMode.Normal" ShowConfirmDialog="true" ShowDeleteConfirmDialog="true"></GridEditSettings>
+        <GridEvents OnToolbarClick="ToolbarClickHandler" OnActionBegin="ActionBeginHandler" TValue="DocumentClassificationCategoryModel"></GridEvents>
+
+        <GridColumns>
+            <GridColumn Field=@nameof(DocumentClassificationCategoryModel.Id) HeaderText="Classification Category ID" TextAlign="TextAlign.Center" Width="120" AllowAdding="false" Visible="false"></GridColumn>
+            <GridColumn Field=@nameof(DocumentClassificationCategoryModel.CategoryName) TextAlign="TextAlign.Center" HeaderText="Category Name" ></GridColumn>
+            <GridColumn Field=@nameof(DocumentClassificationCategoryModel.ParentCategoryName) TextAlign="TextAlign.Center" HeaderText="Parent Category Name" ></GridColumn>
+        </GridColumns>
+    </SfGrid>
+}
+<UnavailableFeature isDialogVisible="@isDialogVisible" IsVisibleChanged="@OnDialogVisibilityChanged" />
